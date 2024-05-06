@@ -1,0 +1,107 @@
+#include <iostream>
+#include <stack>
+#include <vector>
+
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+class LinkedStack {
+private:
+    Node* top;
+public:
+    LinkedStack() : top(nullptr) {}
+
+    void push(int data) {
+        Node* newNode = new Node();
+        newNode->data = data;
+        newNode->next = top;
+        top = newNode;
+    }
+
+    int pop() {
+        if (isEmpty()) {
+            throw runtime_error("Stack is empty!");
+        }
+        int data = top->data;
+        Node* toDelete = top;
+        top = top->next;
+        delete toDelete;
+        return data;
+    }
+
+    bool isEmpty() const {
+        return top == nullptr;
+    }
+};
+
+class VectorStack {
+private:
+    vector<int> stack;
+public:
+    void push(int data) {
+        stack.push_back(data);
+    }
+
+    int pop() {
+        if (isEmpty()) {
+            throw runtime_error("Stack is empty!");
+        }
+        int data = stack.back();
+        stack.pop_back();
+        return data;
+    }
+
+    bool isEmpty() const {
+        return stack.empty();
+    }
+};
+
+int main() {
+    const int n = 30; 
+    int numbers[n];
+    cout << "Digite 30 números em ordem crescente:" << endl;
+
+ 
+    for (int i = 0; i < n; ++i) {
+        if (i == 0) {
+            cout << "Número " << (i + 1) << ": ";
+            cin >> numbers[i];
+        } else {
+            do {
+                cout << "Número " << (i + 1) << " (maior que " << numbers[i - 1] << "): ";
+                cin >> numbers[i];
+            } while (numbers[i] <= numbers[i - 1]); 
+        }
+    }
+
+  
+    LinkedStack evenStack; 
+    VectorStack oddStack; 
+
+
+    for (int i = 0; i < n; ++i) {
+        if (numbers[i] % 2 == 0) {
+            evenStack.push(numbers[i]);
+        } else {
+            oddStack.push(numbers[i]);
+        }
+    }
+
+    cout << "Desempilhando os números pares em ordem decrescente:" << endl;
+    while (!evenStack.isEmpty()) {
+        cout << evenStack.pop() << " ";
+    }
+    cout << endl;
+
+    cout << "Desempilhando os números ímpares em ordem decrescente:" << endl;
+    while (!oddStack.isEmpty()) {
+        cout << oddStack.pop() << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
